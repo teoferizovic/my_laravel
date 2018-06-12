@@ -17,6 +17,6 @@ class UserController extends Controller
 
     public function create(){
     	var_dump(Config::get('constants.ip_address').':'.Config::get('constants.port').'/*');die;
-    	var_dump("kako je majkaa");die;
+    	var_dump("kako je majkaaa");die;
     }
 }
