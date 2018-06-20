@@ -18,3 +18,11 @@ Route::get('/', function () {
 Route::get('/users/index', 'UserController@index');
 
 Route::post('/users/create', 'UserController@create');
+
+Route::get('/categories/index/{id?}', 'CategoryController@index');
+
+Route::post('/categories/create', 'CategoryController@create');
+
+Route::put('/categories/update', 'CategoryController@update');
+
+Route::delete('/categories/delete', 'CategoryController@delete');
