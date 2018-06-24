@@ -17,12 +17,19 @@ Route::get('/', function () {
 
 Route::get('/users/index', 'UserController@index');
 
-Route::post('/users/create', 'UserController@create');
+Route::post('/users/register', 'UserController@create');
+
+Route::post('/users/login', 'UserController@login');
+
+Route::post('/users/logout', 'UserController@logout');
 
 Route::get('/categories/index/{id?}', 'CategoryController@index');
 
 Route::post('/categories/create', 'CategoryController@create');
 
-Route::put('/categories/update', 'CategoryController@update');
+Route::put('/categories/update/{id}', 'CategoryController@update');
 
-Route::delete('/categories/delete', 'CategoryController@delete');
+Route::delete('/categories/delete/{id}', 'CategoryController@delete');
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
