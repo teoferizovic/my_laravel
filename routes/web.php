@@ -23,13 +23,17 @@ Route::put('/users/login', 'UserController@login');
 
 Route::put('/users/logout/{token?}', 'UserController@logout');
 
-Route::get('/categories/index/{id?}', 'CategoryController@index');
+Route::middleware(['check.auth'])->group(function () {
 
-Route::post('/categories/create', 'CategoryController@create');
+	Route::get('/categories/index/{id?}', 'CategoryController@index');
 
-Route::put('/categories/update/{id}', 'CategoryController@update');
+	Route::post('/categories/create', 'CategoryController@create');
 
-Route::delete('/categories/delete/{id}', 'CategoryController@delete');
+	Route::put('/categories/update/{id}', 'CategoryController@update');
+
+	Route::delete('/categories/delete/{id}', 'CategoryController@delete');
+
+});
 
 //Auth::routes();
 
