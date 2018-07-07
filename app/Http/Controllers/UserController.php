@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\User;
 use Config;
+use Illuminate\Support\Facades\Redis;
 
 class UserController extends Controller
 {
@@ -52,10 +53,12 @@ class UserController extends Controller
 			 return \Response::json(['message' => 'Not Found!'], 404);
 		}
 
-		$user->api_token = str_random(60);
+		//create auth_token and save it in Redis
+		$authToken = str_random(60);
+		Redis::set($authToken, $user->email);
 
-    	$user->save();
-
+		$user->api_token = $authToken;
+		
     	return \Response::json($user, 200);
 
     }
@@ -67,15 +70,14 @@ class UserController extends Controller
     		return \Response::json(['message' => 'Bad Request!'], 400);
     	}
 
-    	$user = User::where('api_token', $token)->first();
+    	//find auth_token in Redis and delete it
+    	$user = Redis::get($token);
     	
     	if ($user == null){
     		return \Response::json(['message' => 'Not Found!'], 404);
     	}
 
-    	$user->api_token = null;
-
-    	$user->save();
+    	Redis::del($token);
 
     	return \Response::json(['message' => 'Successfully logged out!'], 200);
     }

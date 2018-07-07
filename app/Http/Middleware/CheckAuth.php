@@ -18,18 +18,15 @@ class CheckAuth
      */
     public function handle($request, Closure $next)
     {
-        $header = $request->header('Authorization');
-        Redis::set('teo', 'ferizovic', 'EX', 10);//expired in 10 sec
-        //$user = Redis::get('name');
-        die;
+        
+        $authToken = str_replace("Bearer ","",$request->header('Authorization'));
+        
+        $user = Redis::get($authToken);
+        
         if(!$user){
             return \Response::json(['message' => 'Unauthorized!'], 401);
         }
-        var_dump($user);
-        var_dump(str_replace("Bearer ","",$header));
-        //$users = User::all();
-        //var_dump($users);
-        die;
+       
         return $next($request);
     }
 }
