@@ -39,6 +39,7 @@ class UserController extends Controller
     public function login(){
 
     	$request = Request();
+    	//var_dump($request->path());die;
     	$input = $request->all();
 
     	if ((isset($input['email']) == false) or (isset($input['password']) == false)) {
