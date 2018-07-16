@@ -23,7 +23,7 @@ Route::put('/users/login', 'UserController@login');
 
 Route::put('/users/logout/{token?}', 'UserController@logout');
 
-Route::middleware(['check.auth'])->group(function () {
+Route::middleware(['check.auth','permissions'])->group(function () {
 
 	Route::get('/categories/index/{id?}', 'CategoryController@index');
 
