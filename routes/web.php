@@ -19,7 +19,7 @@ Route::get('/users/index', 'UserController@index');
 
 Route::post('/users/register', 'UserController@create');
 
-Route::put('/users/login', 'UserController@login');
+Route::post('/users/login', 'UserController@login');
 
 Route::put('/users/logout/{token?}', 'UserController@logout');
 

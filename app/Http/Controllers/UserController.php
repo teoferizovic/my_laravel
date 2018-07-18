@@ -28,7 +28,8 @@ class UserController extends Controller
 
     	$user->name = "";
     	$user->email = $input['email'];
-    	$user->password = md5($input['password']);
+    	//$user->password = md5($input['password']);
+    	$user->password = password_hash($input['password'], PASSWORD_BCRYPT);
 
     	$user->save();
 
@@ -39,22 +40,19 @@ class UserController extends Controller
     public function login(){
 
     	$request = Request();
-    	//var_dump($request->path());die;
+    	
     	$input = $request->all();
 
     	if ((isset($input['email']) == false) or (isset($input['password']) == false)) {
     		 return \Response::json(['message' => 'Bad Request!'], 400);
     	}
 
-    	$user = User::where('email', $input['email'])
-		->where('password', md5($input['password']))
-		->first();
+    	$user = User::where('email', $input['email'])->first();
 
-		if($user == null) {
+		if($user == null or !password_verify($input['password'], $user->password)) {
 			 return \Response::json(['message' => 'Not Found!'], 404);
 		}
 
-		//create auth_token and save it in Redis
 		$authToken = str_random(60);
 		Redis::set($authToken, $user->email);
 
