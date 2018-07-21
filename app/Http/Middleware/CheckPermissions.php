@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redis;
 
 class CheckPermissions
 {
@@ -23,10 +24,19 @@ class CheckPermissions
           "delete" => "delete",
         ];
 
+        $authToken = str_replace("Bearer ","",$request->header('Authorization'));
+        
 
-        $results = DB::select('SELECT p.name FROM users as u inner join roles as r on u.role_id = r.id inner join permissions as p on r.id = p.role_id where u.id=5 and p.name=:name', ['name' => $routes[strtolower($request->method())]]);
+        $redisAclKey = Redis::get($authToken)."-"."ACL";
+        
+        $permissionsJson = json_decode(Redis::get($redisAclKey));
 
-        if(empty($results))
+        $permissionsArr = (array) $permissionsJson;
+        
+        //$routes[strtolower($request->method())]
+        /*$results = DB::select('SELECT p.name FROM users as u inner join roles as r on u.role_id = r.id inner join permissions as p on r.id = p.role_id where u.id=5 and p.name=:name', ['name' => $routes[strtolower($request->method())]]);*/
+
+        if(!$permissionsArr[$routes[strtolower($request->method())]])
             return \Response::json(['message' => 'Forbidden!'], 403);
 
         return $next($request);

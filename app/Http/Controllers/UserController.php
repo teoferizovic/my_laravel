@@ -7,6 +7,7 @@ use Illuminate\Http\Response;
 use App\User;
 use Config;
 use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -17,6 +18,37 @@ class UserController extends Controller
 
     public function create(){
     	
+    	/*$allRoles = DB::select('SELECT p.name from permissions as p GROUP BY(p.name)');
+    	
+    	$userRoles = DB::select('SELECT p.name from users as u inner join roles as r on u.role_id = r.id inner join permissions as p on r.id=p.role_id where  u.role_id=1');
+
+    	$userRolesArr = [];
+    	$allRolesArr = [];
+    	$permissions = [];
+
+    	foreach ($userRoles as $role) {
+    		$userRolesArr[] = $role->name;
+    	}
+
+    	
+    	foreach ($allRoles as $role) {
+    		$allRolesArr[] = $role->name;
+    	}
+
+    	foreach ($allRolesArr as $role) {
+   
+    		if(in_array($role, $userRolesArr)){
+    			$permissions[$role] = true;
+    		} else {
+    			$permissions[$role] = false;
+    		}
+   
+    	}
+    	
+    	$redisAclKey = "teo.ferizovic@hotmail.com"."-"."ACL";
+    	
+    	Redis::set($redisAclKey,json_encode($permissions));
+		die;*/
     	$request = Request();
     	$input = $request->all();
 
@@ -28,12 +60,46 @@ class UserController extends Controller
 
     	$user->name = "";
     	$user->email = $input['email'];
-    	//$user->password = md5($input['password']);
+    	
     	$user->password = password_hash($input['password'], PASSWORD_BCRYPT);
+    	$user->role_id = 2;
 
-    	$user->save();
+    	if($user->save()){
 
-    	return \Response::json(['message' => 'Successfully saved item!'], 200);
+    		$allRoles = DB::select('SELECT p.name from permissions as p GROUP BY(p.name)');
+    	
+	    	$userRoles = DB::select('SELECT p.name from users as u inner join roles as r on u.role_id = r.id inner join permissions as p on r.id=p.role_id where u.role_id=:role_id',["role_id" => $user->role_id]);
+
+	    	$userRolesArr = [];
+	    	$allRolesArr = [];
+	    	$permissions = [];
+
+	    	foreach ($userRoles as $role) {
+	    		$userRolesArr[] = $role->name;
+	    	}
+
+	    	
+	    	foreach ($allRoles as $role) {
+	    		$allRolesArr[] = $role->name;
+	    	}
+
+	    	foreach ($allRolesArr as $role) {
+	   
+	    		if(in_array($role, $userRolesArr)){
+	    			$permissions[$role] = true;
+	    		} else {
+	    			$permissions[$role] = false;
+	    		}
+	   
+	    	}
+	    	
+	    	$redisAclKey = $user->email."-"."ACL";
+	    	
+	    	Redis::set($redisAclKey,json_encode($permissions));
+
+    		return \Response::json(['message' => 'Successfully saved item!'], 200);
+    	}
+
     	
     }
 
