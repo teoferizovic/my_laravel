@@ -26,20 +26,26 @@ class UserController extends Controller
     		 return \Response::json(['message' => 'Bad Request!'], 400);
     	}
 
-    	$user = new User();
+    	$user = User::where('email', $input['email'])->first();
 
-    	$user->name = "";
-    	$user->email = $input['email'];
+    	if($user) {
+    		return \Response::json(['message' => 'User with that username allready exists!'], 400);
+    	}
     	
-    	$user->password = password_hash($input['password'], PASSWORD_BCRYPT);
-    	$user->role_id = isset($input['role_id']) ? $input['role_id'] : 2;
+    	$newUser = new User();
 
-    	if($user->save()){
+    	$newUser->name = "";
+    	$newUser->email = $input['email'];
+    	
+    	$newUser->password = password_hash($input['password'], PASSWORD_BCRYPT);
+    	$newUser->role_id = isset($input['role_id']) ? $input['role_id'] : 2;
+
+    	if($newUser->save()){
 
     		$allRoles = DB::select('SELECT p.name from permissions as p GROUP BY(p.name)');
     	
 	    	  $userRoles = DB::select('SELECT p.name from users as u inner join roles as r on u.role_id = r.id inner join role_permissions as rp on r.id=rp.role_id inner join permissions as p 
-	   			  on rp.permission_id = p.id where u.role_id=:role_id',["role_id" => $user->role_id]);
+	   			  on rp.permission_id = p.id where u.role_id=:role_id',["role_id" => $newUser->role_id]);
 
 	    	$userRolesArr = [];
 	    	$allRolesArr = [];
@@ -64,7 +70,7 @@ class UserController extends Controller
 	   
 	    	}
 	    	
-	    	$redisAclKey = $user->email."-"."ACL";
+	    	$redisAclKey = $newUser->email."-"."ACL";
 	    	
 	    	Redis::set($redisAclKey,json_encode($permissions));
 
