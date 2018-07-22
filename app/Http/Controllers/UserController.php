@@ -11,7 +11,13 @@ use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
-    public function index(){
+    public function index($id=null){
+
+    	if($id != null){
+    		$category = User::with(['user_images'])->where('id', $id)->first();
+    		return \Response::json($category,201);
+    	}
+
     	$users = User::all();
     	return \Response::json($users,201);
     }
