@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\UserImage;
+use Config;
 
 class UserImageController extends Controller
 {
     public static function storeFile(array $input,int $userId) : bool {
     	
-    	if(!isset($_FILES["files"]["tmp_name"])){
+    	
+        if(!isset($_FILES["files"]["tmp_name"])){
     		return false;
     	}
 
@@ -19,13 +21,15 @@ class UserImageController extends Controller
     	if ($numOfFiles > 0) {
 
     		
-    		$path = $_SERVER['DOCUMENT_ROOT']."/uploads/".$input['email'];
-    		
+    		//$path = $_SERVER['DOCUMENT_ROOT']."/uploads/".$input['email'];
+    		$path = config('storage.userFilePath').$input['email'];
+            
     		//make dir by email
     		if (!file_exists($path)) { 
 			    mkdir($path, 0777, true);
 			}
 
+            
             for($i = 0; $i < $numOfFiles; $i ++) {
                 
                 $tmp_file = $_FILES["files"]["tmp_name"][$i];
@@ -40,7 +44,7 @@ class UserImageController extends Controller
                 //save in tbl user_images
                 $userImage = new UserImage;
             
-                $userImage->path     =   $upload_dir; 
+                $userImage->path     =   config('storage.userImgPath').'/'.$input['email'].'/'.$file_name; 
                 $userImage->user_id  =   $userId;
                 
                 $userImage->save();
