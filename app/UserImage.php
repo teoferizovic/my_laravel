@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class UserImages extends Model
+class UserImage extends Model
 {
     //
     protected $table = 'user_images';
