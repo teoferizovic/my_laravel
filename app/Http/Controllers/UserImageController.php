@@ -13,7 +13,14 @@ class UserImageController extends Controller
     	
     	
         if(!isset($_FILES["files"]["tmp_name"])){
-    		return false;
+    		//save in tbl user_images
+            $userImage = new UserImage;
+            
+            $userImage->path     =   config('storage.userImgPath').'default/default.png'; 
+            $userImage->user_id  =   $userId;
+                
+            $userImage->save();
+            return true;
     	}
 
     	$numOfFiles = count($_FILES["files"]["tmp_name"]);
@@ -44,7 +51,7 @@ class UserImageController extends Controller
                 //save in tbl user_images
                 $userImage = new UserImage;
             
-                $userImage->path     =   config('storage.userImgPath').'/'.$input['email'].'/'.$file_name; 
+                $userImage->path     =   config('storage.userImgPath').$input['email'].'/'.$file_name; 
                 $userImage->user_id  =   $userId;
                 
                 $userImage->save();
