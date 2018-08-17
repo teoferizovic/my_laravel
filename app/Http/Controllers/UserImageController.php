@@ -12,8 +12,11 @@ class UserImageController extends Controller
     public static function storeFile(array $input,int $userId) : bool {
     	
     	
+        //$str = strstr(str_replace("@","_",$str),'.',true);
+        
         if(!isset($_FILES["files"]["tmp_name"])){
-    		//save in tbl user_images
+    		
+            //save in tbl user_images
             $userImage = new UserImage;
             
             $userImage->path     =   config('storage.userImgPath').'default/default.png'; 
@@ -29,7 +32,8 @@ class UserImageController extends Controller
 
     		
     		//$path = $_SERVER['DOCUMENT_ROOT']."/uploads/".$input['email'];
-    		$path = config('storage.userFilePath').$input['email'];
+            $folderName = strstr(str_replace("@","_",$input['email']),'.',true);
+    		$path = config('storage.userFilePath').$folderName;
             
     		//make dir by email
     		if (!file_exists($path)) { 
@@ -51,7 +55,7 @@ class UserImageController extends Controller
                 //save in tbl user_images
                 $userImage = new UserImage;
             
-                $userImage->path     =   config('storage.userImgPath').$input['email'].'/'.$file_name; 
+                $userImage->path     =   config('storage.userImgPath').$folderName.'/'.$file_name; 
                 $userImage->user_id  =   $userId;
                 
                 $userImage->save();
