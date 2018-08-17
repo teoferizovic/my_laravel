@@ -19,7 +19,7 @@ class UserController extends Controller
     		return \Response::json($users,201);
     	}
 
-    	$users = User::all();
+    	$users = User::with(['user_images'])->get();
     	return \Response::json($users,201);
     }
 
