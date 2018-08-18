@@ -25,6 +25,7 @@ Route::put('/users/logout/{token?}', 'UserController@logout');
 
 Route::middleware(['check.auth','permissions'])->group(function () {
 
+	//category routes
 	Route::get('/categories/index/{id?}', 'CategoryController@index');
 
 	Route::post('/categories/create', 'CategoryController@create');
@@ -33,6 +34,8 @@ Route::middleware(['check.auth','permissions'])->group(function () {
 
 	Route::delete('/categories/delete/{id}', 'CategoryController@delete');
 
+	//product routes
+	Route::get('/products/index/{id?}', 'ProductController@index');
 });
 
 //Auth::routes();
