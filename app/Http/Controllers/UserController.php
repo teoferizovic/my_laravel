@@ -23,6 +23,41 @@ class UserController extends Controller
     	return \Response::json($users,201);
     }
 
+    public function indexQ(Request $request) {
+
+        $params = ['name','email','password'];
+        $query = "SELECT * FROM users";
+
+        $queryParams = $request->query();
+        
+        if (!empty($queryParams)){
+
+            $i = 0;
+
+            foreach ($params as $param) {               
+
+               if(isset($queryParams[$param])){
+                     if($i>0){
+                       $query .= " AND $param='$queryParams[$param]'"; 
+                       continue;
+                     } 
+                     $query .= " WHERE $param='$queryParams[$param]'";
+                     $i++; 
+                }else{
+                    continue;
+                }
+
+            }
+            
+        }
+
+        $users = DB::select($query);
+        return \Response::json($users,201);
+        //http://127.0.0.1:8000/users/indexQ/?name=test_name&email=test@test.com
+    }
+
+
+
     public function create(){
     	
     	
