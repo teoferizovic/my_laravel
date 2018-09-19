@@ -25,9 +25,29 @@ class CategoryController extends Controller
     	return \Response::json($categories,201);
     }
 
+    public function store($id=null,Request $request){
+        
+        $input = $request->all();
+
+        $category = $request->isMethod('put') ? Category::findOrFail($id) :
+        new Category;
+        
+        if (isset($input['name']) == false) {
+             return \Response::json(['message' => 'Bad Request!'], 400);
+        }
+
+        $category->name = $input['name'];
+        $category->description = $input['description'];
+
+        if ($category->save()) {
+            return \Response::json(['message' => 'Successfully saved item!'], 200);
+        }
+        
+    }
+
     public function create(Request $request){
     	
-    	$input = $request->all();
+        $input = $request->all();
     	
     	if (isset($input['name']) == false) {
     		 return \Response::json(['message' => 'Bad Request!'], 400);

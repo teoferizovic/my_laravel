@@ -30,9 +30,12 @@ Route::middleware(['check.auth','permissions'])->group(function () {
 	//category routes
 	Route::get('/categories/index/{id?}', 'CategoryController@index');
 
-	Route::post('/categories/create', 'CategoryController@create');
+	//Route::post('/categories/create', 'CategoryController@create');
 
-	Route::put('/categories/update/{id}', 'CategoryController@update');
+	//Route::put('/categories/update/{id}', 'CategoryController@update');
+	Route::post('/categories/create', 'CategoryController@store');
+
+	Route::put('/categories/update/{id}', 'CategoryController@store');
 
 	Route::delete('/categories/delete/{id}', 'CategoryController@delete');
 
