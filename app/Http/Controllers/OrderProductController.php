@@ -20,6 +20,9 @@ class OrderProductController extends Controller
 
     	$order_product->order_id = $input['order_id'];
     	$order_product->product_id = $input['product_id'];
+    	$order_product->price = $input['price'];
+    	$order_product->num = $input['num'];
+    	$order_product->final_price = $input['price'] * $input['num'];
     	
     	if ($order_product->save()) {
     		return \Response::json($order_product,201);
