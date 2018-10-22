@@ -25,4 +25,18 @@ class OrderController extends Controller
     	}
     	
     }
+
+    public function update($id=null,$status=null){
+        
+       
+        $order = Order::findOrFail($id);
+        
+        $order->status  = ($status==null) ? "F" : $status;
+
+        if ($order->save()) {
+            return \Response::json(['message' => 'Successfully saved item!'], 200);
+        }
+
+        
+    }
 }
