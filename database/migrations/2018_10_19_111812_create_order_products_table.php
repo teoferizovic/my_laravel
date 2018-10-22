@@ -15,7 +15,6 @@ class CreateOrderProductsTable extends Migration
     {
         Schema::create('order_products', function (Blueprint $table) {
             $table->increments('id');
-            $table->timestamps();
             $table->unsignedInteger('order_id');
             $table->foreign('order_id')->references('id')->on('orders');
             $table->unsignedInteger('product_id');
@@ -25,6 +24,8 @@ class CreateOrderProductsTable extends Migration
             $table->string('status',1)->default('A');
             $table->float('final_price');
             $table->softDeletes();
+            $table->timestamps();
+
         });
     }
 

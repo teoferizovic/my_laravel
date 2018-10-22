@@ -20,8 +20,8 @@ class OrderController extends Controller
 
     	$order->user_id = $input['user_id'];
     	
-    	if ($order->save()){
-    		return \Response::json(['message' => 'Successfully saved item!'], 200);
+    	if ($order->save()) {
+    		return \Response::json($order,201);
     	}
     	
     }
