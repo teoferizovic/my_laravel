@@ -10,4 +10,15 @@ class Order extends Model
 
 	protected $dates = ['deleted_at'];
     protected $table = 'orders';
+
+    public function order_products()
+    {
+        return $this->hasMany('App\OrderProduct');
+    }
+
+    public function products()
+    {
+        return $this->belongsToMany('App\Product', 'order_products', 'order_id', 'product_id');
+    }
+
 }

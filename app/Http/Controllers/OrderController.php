@@ -8,6 +8,14 @@ use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
+     
+	 public function index(){
+	 	
+	 	$orders = Order::with(['products'])->where('status', "F")->get();
+    	return \Response::json($orders,201);
+
+	 }
+	 
      public function create(){
         
         $request = Request();
