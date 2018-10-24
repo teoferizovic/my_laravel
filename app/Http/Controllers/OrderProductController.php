@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\OrderProduct;
+use App\Product;
+use Illuminate\Http\Request;
 
 class OrderProductController extends Controller
 {
@@ -16,6 +17,12 @@ class OrderProductController extends Controller
              return \Response::json(['message' => 'Bad Request!'], 400);
         }
 
+        $product = Product::findOrFail($input['product_id']);
+        
+        if(($product->status == 0) or ($input['num'] > $product->status) ){
+        	 return \Response::json(['message' => 'Bad Request!'], 400);
+        }
+        
         $order_product = new OrderProduct();
 
     	$order_product->order_id = $input['order_id'];
@@ -25,7 +32,13 @@ class OrderProductController extends Controller
     	$order_product->final_price = $input['price'] * $input['num'];
     	
     	if ($order_product->save()) {
-    		return \Response::json($order_product,201);
+    		
+    		$product->status = $product->status - $input['num'];
+    		
+    		if($product->save()) {
+    			return \Response::json($order_product,201);
+    		}
+
     	}
     	
     }
