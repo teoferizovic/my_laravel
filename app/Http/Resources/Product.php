@@ -16,13 +16,13 @@ class Product extends Resource
      */
     public function toArray($request)
     {
-        //return parent::toArray($request);
+        
          return [
             'id'            => $this->id,
             'name'          => $this->name,
             'status'        => $this->status,
             'category_id'   => $this->category_id,
-            'category'      => CategoryResource::make(Category::find($this->id)),
+            'category'      => Category::find($this->category_id)->name,
             'price'         => $this->price,
             'discount'      => $this->discount,
             'final_price'   => $this->price * $this->price, 
@@ -31,5 +31,6 @@ class Product extends Resource
             'updated_at'    => $this->updated_at,
             'external_name' => $this->external_name,
          ];
+         
     }
 }
