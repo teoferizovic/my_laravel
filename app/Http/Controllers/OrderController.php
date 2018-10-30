@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Order;
+use App\OrderProduct;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -48,9 +49,12 @@ class OrderController extends Controller
 
         $order->status       = 		($status==null) ? "F" : $status;
         $order->final_price  = 		$final_price;
- 
+        
         if ($order->save()) {
-            return \Response::json(['message' => 'Successfully saved item!'], 200);
+            //batch update
+            if(OrderProduct::where('order_id', $id)->update(['status' => 'F'])>0){
+                return \Response::json(['message' => 'Successfully saved item!'], 200);
+            }
         }
 
         
