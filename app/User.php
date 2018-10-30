@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Config;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -27,10 +28,14 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public function user_images()
-    {
+    public function user_images(){
         return $this->hasMany('App\UserImage');
     }
+
+    public function routeNotificationForSlack(){
+       return config('app.slack_webhook'); 
+    }
+    
 
     
 }

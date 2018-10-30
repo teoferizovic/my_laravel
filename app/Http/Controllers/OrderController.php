@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Order;
+use App\User;
 use App\OrderProduct;
 use Illuminate\Http\Request;
+use App\Notifications\Newslack;
 use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
@@ -53,6 +55,8 @@ class OrderController extends Controller
         if ($order->save()) {
             //batch update
             if(OrderProduct::where('order_id', $id)->update(['status' => 'F'])>0){
+                //slack notifications
+                User::findOrFail($order->user_id)->notify(new Newslack("New order has been finalized"));
                 return \Response::json(['message' => 'Successfully saved item!'], 200);
             }
         }
