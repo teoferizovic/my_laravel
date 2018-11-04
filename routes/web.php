@@ -51,6 +51,8 @@ Route::middleware(['check.auth','permissions'])->group(function () {
 	Route::post('/order_products/create', 'OrderProductController@create');
 });
 
+Route::get('/orders/indexV', 'ProductViewController@index');
+
 //Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
