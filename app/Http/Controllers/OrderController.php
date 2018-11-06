@@ -7,6 +7,7 @@ use App\User;
 use App\OrderProduct;
 use Illuminate\Http\Request;
 use App\Notifications\Newslack;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
@@ -56,7 +57,9 @@ class OrderController extends Controller
             //batch update
             if(OrderProduct::where('order_id', $id)->update(['status' => 'F'])>0){
                 //slack notifications
-                User::findOrFail($order->user_id)->notify(new Newslack("New order has been finalized"));
+                //User::findOrFail($order->user_id)->notify(new Newslack("New order has been finalized"));
+                //publish order to redis channel
+                Redis::publish('finished_order', json_encode($order));
                 return \Response::json(['message' => 'Successfully saved item!'], 200);
             }
         }
