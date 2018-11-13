@@ -87,7 +87,7 @@ class OrderController extends Controller
     public function sendEmail(Order $order){
        
         $user = User::findOrFail($order->user_id);
-        //var_dump(config('app.url').":8080/orders/checkout/".$order->id);die;       
+             
         $vals = [];
 
         $vals['id']         =    $user->id;
