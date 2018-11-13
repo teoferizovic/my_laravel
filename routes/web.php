@@ -53,6 +53,8 @@ Route::middleware(['check.auth','permissions'])->group(function () {
 
 Route::get('/orders/indexV', 'ProductViewController@index');
 
+Route::get('/orders/checkout/{id}', 'OrderController@checkout');
+
 //Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
