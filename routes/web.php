@@ -55,6 +55,8 @@ Route::get('/orders/indexV', 'ProductViewController@index');
 
 Route::get('/orders/checkout/{id}', 'OrderController@checkout');
 
+Route::post('/payments/create', 'PaymentController@create');
+
 //Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
