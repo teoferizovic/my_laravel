@@ -57,6 +57,8 @@ Route::get('/orders/checkout/{id}', 'OrderController@checkout');
 
 Route::post('/payments/create', 'PaymentController@create');
 
+Route::post('/forder/create', 'FOrderController@create');
+
 //Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
