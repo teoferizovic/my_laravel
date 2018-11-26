@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Product;
-//use Cache;
+use Cache;
 use App\Http\Resources\Product as ProductResource;
 
 class ProductController extends Controller
@@ -20,11 +20,12 @@ class ProductController extends Controller
 
     	$products = Product::where('status','>', 0)->get();
        
-        return ProductResource::collection($products);
-
-        /*return Cache::remember('products', 2, function() use($products) {
+        //return ProductResource::collection($products);
+        $fullUrl = request()->fullUrl();
+        
+        return Cache::remember($fullUrl, 2, function() use($products) {
             return ProductResource::collection($products);
-        });*/
+        });
     	//return \Response::json($products,201);
     }
 }
