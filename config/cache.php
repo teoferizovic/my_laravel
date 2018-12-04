@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'default' => env('CACHE_DRIVER', 'file'),
+    'default' => env('CACHE_DRIVER', 'redis-mem'),
 
     /*
     |--------------------------------------------------------------------------
@@ -71,6 +71,10 @@ return [
         'redis' => [
             'driver' => 'redis',
             'connection' => 'default',
+        ],
+        'redis-mem' => [
+            'driver' => 'redis',
+            'connection' => 'model-cache',
         ],
 
     ],
