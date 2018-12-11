@@ -32,6 +32,11 @@ class User extends Authenticatable
         return $this->hasMany('App\UserImage');
     }
 
+    public function orders(){
+        return $this->hasMany('App\Order')->select(array('id', 'status','user_id','final_price'));
+    }
+
+
     public function routeNotificationForSlack(){
        return config('app.slack_webhook'); 
     }

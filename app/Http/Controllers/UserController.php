@@ -15,11 +15,11 @@ class UserController extends Controller
     public function index($id=null){
 
     	if($id != null){
-    		$users = User::with(['user_images'])->where('id', $id)->first();
+    		$users = User::with(['user_images','orders'])->where('id', $id)->first();
     		return \Response::json($users,201);
     	}
 
-    	$users = User::with(['user_images'])->get();
+    	$users = User::with(['user_images','orders'])->get();
     	return \Response::json($users,201);
     }
 
