@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\User;
+use Helper;
 use Config;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\DB;
@@ -16,11 +17,13 @@ class UserController extends Controller
 
     	if($id != null){
     		$users = User::with(['user_images','orders'])->where('id', $id)->first();
-    		return \Response::json($users,201);
+    		return \Response::json($users,200);
     	}
 
+        //$users = Helper::EagerLoadingOrders();
+
     	$users = User::with(['user_images','orders'])->get();
-    	return \Response::json($users,201);
+    	return \Response::json($users,200);
     }
 
     public function indexQ(Request $request) {
