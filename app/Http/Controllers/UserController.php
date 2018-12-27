@@ -89,7 +89,7 @@ class UserController extends Controller
 
     		$userImage = UserImageController::storeFile($input,$newUser->id);
     		
-    		$allRoles = DB::select('SELECT p.name from permissions as p GROUP BY(p.name)');
+    		/*$allRoles = DB::select('SELECT p.name from permissions as p GROUP BY(p.name)');
     	
 	    	$userRoles = DB::select('SELECT p.name from users as u inner join roles as r on u.role_id = r.id inner join role_permissions as rp on r.id=rp.role_id inner join permissions as p 
 	   			  on rp.permission_id = p.id where u.role_id=:role_id',["role_id" => $newUser->role_id]);
@@ -119,7 +119,7 @@ class UserController extends Controller
 	    	
 	    	$redisAclKey = $newUser->email."-"."ACL";
 	    	
-	    	Redis::set($redisAclKey,json_encode($permissions));
+	    	Redis::set($redisAclKey,json_encode($permissions));*/
 
     		return \Response::json(['message' => 'Successfully saved item!'], 200);
     	}

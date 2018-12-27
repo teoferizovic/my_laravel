@@ -6,13 +6,12 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\UserImage;
 use Config;
+use App\Jobs\UploadImage;
 
 class UserImageController extends Controller
 {
     public static function storeFile(array $input,int $userId) : bool {
     	
-    	
-        //$str = strstr(str_replace("@","_",$str),'.',true);
         
         if(!isset($_FILES["files"]["tmp_name"])){
     		
@@ -28,7 +27,9 @@ class UserImageController extends Controller
 
     	$numOfFiles = count($_FILES["files"]["tmp_name"]);
 
-    	if ($numOfFiles > 0) {
+        //UploadImage::dispatch($input['email'],$userId,$_FILES);
+    	//return true;
+        if ($numOfFiles > 0) {
 
     		
     		//$path = $_SERVER['DOCUMENT_ROOT']."/uploads/".$input['email'];
@@ -47,7 +48,7 @@ class UserImageController extends Controller
                 $file_name = round(microtime(true) * 1000)."_".$_FILES["files"]["name"][$i];
                 
                 $upload_dir = $path."/".$file_name;
-
+                 
                 if (move_uploaded_file($tmp_file,$upload_dir) != true) {
                     return false;
                 }
@@ -60,12 +61,11 @@ class UserImageController extends Controller
                 
                 $userImage->save();
 
-                }
+            }
 
-                return true;
+            return true;
 
         }
-
     	
     }
 }
