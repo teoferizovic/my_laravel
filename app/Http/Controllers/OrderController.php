@@ -11,6 +11,7 @@ use App\Notifications\Newslack;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use App\Jobs\SendEmail;
 
 class OrderController extends Controller
 {
@@ -58,7 +59,8 @@ class OrderController extends Controller
         if ($order->save()) {
             //batch update
             if(OrderProduct::where('order_id', $id)->update(['status' => 'P'])>0){
-                $this->sendEmail($order);
+                //$this->sendEmail($order);
+                SendEmail::dispatch($order);
                 return \Response::json(['message' => 'Successfully saved item!'], 200);
             }
         }
