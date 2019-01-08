@@ -32,6 +32,10 @@ class User extends Authenticatable
         return $this->hasMany('App\UserImage');
     }
 
+     public function user_logs(){
+        return $this->hasMany('App\UserLog');
+    }
+
     public function orders(){
         return $this->hasMany('App\Order')->select(array('id', 'status','user_id','final_price'));
     }

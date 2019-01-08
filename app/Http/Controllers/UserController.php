@@ -11,19 +11,26 @@ use Config;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\UserImageController;
+use App\Http\Controllers\UserLogController;
 
 class UserController extends Controller
 {
     public function index($id=null){
 
     	if($id != null){
-    		$users = User::with(['user_images','orders'])->where('id', $id)->first();
-    		return \Response::json($users,200);
+    		$users = User::with(['user_images','orders','user_logs'=> function ($query) {
+                $query->orderBy('id', 'desc')->limit(1);
+            }])->where('id', $id)->first();
+    		
+            return \Response::json($users,200);
     	}
 
         //$users = Helper::EagerLoadingOrders();
 
-    	$users = User::with(['user_images','orders'])->get();
+    	$users = User::with(['user_images','orders','user_logs'  => function ($query) {
+            $query->orderBy('id', 'desc')->limit(1);
+        }])->get();
+
     	return \Response::json($users,200);
     }
 
@@ -147,6 +154,10 @@ class UserController extends Controller
         if($user == null or !Hash::check($input['password'], $user->password)) {
 			 return \Response::json(['message' => 'Not Found!'], 404);
 		}
+
+        if(UserLogController::create(["user_id"=>$user->id,'ip_address'=>$request->getClientIp()]) != true){
+             return \Response::json(['message' => 'Server Error!'], 500);
+        }
 
 		$authToken = str_random(60);
 		Redis::set($authToken, $user->email);
