@@ -4,26 +4,20 @@ namespace App\Http\Controllers;
 
 use App\FOrder;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\Custom\CustomFOrderRequest;
 
 class FOrderController extends Controller
 {
     public function create(){
         
         $request = Request();
+
+        $validationArr = CustomFOrderRequest::validate($request->all());
         
-		$validator = Validator::make($request->all(), [
-            'user_id'     => 'required|int',
-		    'order_id'    => 'required|int',
-		    'payment_id'  => 'required|int',
-		    'final_price' => 'required',
-		    'created_at'  => 'required|string',
-        ]);
-        
-        if ($validator->fails()) {
-           return \Response::json(['message' => 'Bad Request!'], 400);
+        if ($validationArr['validated'] == false){
+             return \Response::json(['message' => 'Bad Request!','errors' => $validationArr['errors']], 400);
         }
-        
+		
         $input = $request->all();
             
         $f_order = new FOrder();
