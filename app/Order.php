@@ -11,6 +11,16 @@ class Order extends Model
 	protected $dates = ['deleted_at'];
     protected $table = 'orders';
 
+    public function scopeStatus($query)
+    {
+      return $query->where('status', 'F');
+    }
+
+    public function scopePrice($query,string $price)
+    {
+      return $query->where('final_price', $price);
+    }
+
     public function order_products()
     {
         return $this->hasMany('App\OrderProduct');

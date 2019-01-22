@@ -22,6 +22,14 @@ class OrderController extends Controller
     	return \Response::json($orders,201);
 
 	 }
+
+     public function index1(){
+        
+        $orders = Order::status()->price('60')->get();
+        //$orders = Order::whereFinalPrice(40)->get();
+        return \Response::json($orders,201);
+
+     }
 	 
      public function create(){
         
