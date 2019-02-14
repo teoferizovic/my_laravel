@@ -30,9 +30,6 @@ Route::middleware(['check.auth','permissions'])->group(function () {
 	//category routes
 	Route::get('/categories/index/{id?}', 'CategoryController@index');
 
-	//Route::post('/categories/create', 'CategoryController@create');
-
-	//Route::put('/categories/update/{id}', 'CategoryController@update');
 	Route::post('/categories/create', 'CategoryController@store');
 
 	Route::put('/categories/update/{id}', 'CategoryController@store');
@@ -60,6 +57,14 @@ Route::post('/payments/create', 'PaymentController@create');
 
 Route::post('/forder/create', 'FOrderController@create');
 
+//region routes
+Route::get('/regions/index/{id?}', 'RegionController@index');
+
+Route::post('/regions/create', 'RegionController@create');
+
+Route::delete('/regions/delete/{id}', 'RegionController@delete');
+
+Route::put('/regions/update/{id}', 'RegionController@update');
 //Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
