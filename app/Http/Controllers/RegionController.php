@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Region;
+use Illuminate\Http\Request;
 use App\Http\Controllers\SubRegionController;
+use App\Http\Requests\Custom\CustomRegionRequest;
 
 class RegionController extends Controller
 {
@@ -21,9 +22,15 @@ class RegionController extends Controller
 
     
     public function create(Request $request){
-    	
+
         $input = $request->all();
-    	   	
+        
+        $validationArr = CustomRegionRequest::validate($input);
+        
+        if ($validationArr['validated'] == false){
+             return \Response::json(['message' => 'Bad Request!','errors' => $validationArr['errors']], 400);
+        }
+    	  	   	
     	$region = new Region();
 
     	$region->name = $input['name'];
@@ -42,7 +49,6 @@ class RegionController extends Controller
     }
 
     public function update($id,Request $request){
-
 		
 		$region = Region::find($id);
     	
@@ -50,7 +56,13 @@ class RegionController extends Controller
     		return \Response::json(['message' => 'Not Found!'], 404);
     	}
 
-    	$input = $request->all();
+        $input = $request->all();
+
+        $validationArr = CustomRegionRequest::validate($input);
+        
+        if ($validationArr['validated'] == false){
+             return \Response::json(['message' => 'Bad Request!','errors' => $validationArr['errors']], 400);
+        }
 
     	$region->name = $input['name'];
     	$region->description = $input['description'];
