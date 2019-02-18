@@ -5,27 +5,30 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Category;
 use Illuminate\Support\Facades\DB;
+use App\Repositories\CRUDRepositoryInterface;
 
 class CategoryController extends Controller
 {
     
+    protected $category;
+    
+    public function __construct(CRUDRepositoryInterface $category){
+        $this->category = $category;
+    }
 
-	 public function __construct(){
-        //$this->middleware('auth:api');
-     }   
 
     public function index($id=null){
     	
         if($id != null){
-    		$category = Category::where('id', $id)->first();
-    		return \Response::json($category,201);
+    		$category = $this->category->get($id);
+            return \Response::json($category,201);
     	}
 
-    	$categories = Category::all();
+        $categories  = $this->category->all();
     	return \Response::json($categories,201);
     }
 
-    public function store($id=null,Request $request){
+    /*public function store($id=null,Request $request){
         
         $input = $request->all();
 
@@ -43,53 +46,48 @@ class CategoryController extends Controller
             return \Response::json(['message' => 'Successfully saved item!'], 200);
         }
         
-    }
+    }*/
 
     public function create(Request $request){
     	
-        $input = $request->all();
+        $data = $request->all();
     	
-    	if (isset($input['name']) == false) {
+    	if (isset($data['name']) == false) {
     		 return \Response::json(['message' => 'Bad Request!'], 400);
     	}
 
-    	$category = new Category();
-
-    	$category->name = $input['name'];
-    	$category->description = $input['description'];
-
-    	$category->save();
+        $this->category->create($data);
+    	
     	return \Response::json(['message' => 'Successfully saved item!'], 200);
     	
     }
 
     public function update($id,Request $request){
 
-		$category = Category::find($id);
+		$category = $this->category->get($id);
     	
     	if ($category==null){
     		return \Response::json(['message' => 'Not Found!'], 404);
     	}
+    	
+        $data = $request->all();
 
-    	$input = $request->all();
+        $this->category->update($category,$data);
 
-    	$category->name = $input['name'];
-    	$category->description = $input['description'];
-
-    	$category->save();
     	return \Response::json(['message' => 'Successfully updated item!'], 200);
 
     }
 
     public function delete($id){
     	
-    	$category = Category::find( $id );
-    	
+    	$category = $this->category->get($id);
+
     	if ($category==null){
     		return \Response::json(['message' => 'Not Found!'], 404);
     	}
-
-		$category->delete();
+       
+        $this->category->delete($category);
+		
 		return \Response::json(['message' => 'Successfully deleted item!'], 200);
     }
 
