@@ -1,15 +1,17 @@
 <?php
 namespace App\Repositories;
 
+use App\Category;
+
 interface CRUDRepositoryInterface
 {
 	public function all();
 
-	public function get($id);
+	public function get(int $id);
 
-	public function create($data);
+	public function create(array $data):bool;
 
-	public function update($category,$data);
+	public function update(Category $category,array $data):bool;
 
-	public function delete($category);
+	public function delete(Category $category):bool;
 }

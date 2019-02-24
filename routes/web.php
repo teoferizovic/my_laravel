@@ -15,10 +15,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/users/index/{id?}', 'UserController@index');
-
-Route::get('/users/indexQ/', 'UserController@indexQ');
-
 Route::post('/users/register', 'UserController@create');
 
 Route::post('/users/login', 'UserController@login');
@@ -27,6 +23,10 @@ Route::put('/users/logout/{token?}', 'UserController@logout');
 
 Route::middleware(['check.auth','permissions'])->group(function () {
 
+	Route::get('/users/index/{id?}', 'UserController@index');
+
+	Route::get('/users/indexQ/', 'UserController@indexQ');
+	
 	//category routes
 	Route::get('/categories/index/{id?}', 'CategoryController@index');
 

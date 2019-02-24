@@ -21,7 +21,7 @@ class CategoryController extends Controller
     	
         if($id != null){
     		$category = $this->category->get($id);
-            return \Response::json($category,201);
+            return \Response::json(($category==null) ? [] : [$category],201);
     	}
 
         $categories  = $this->category->all();
@@ -81,7 +81,7 @@ class CategoryController extends Controller
     public function delete($id){
     	
     	$category = $this->category->get($id);
-
+        
     	if ($category==null){
     		return \Response::json(['message' => 'Not Found!'], 404);
     	}

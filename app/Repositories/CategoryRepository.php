@@ -7,25 +7,25 @@ class CategoryRepository implements CRUDRepositoryInterface
 {
 
 	public function all(){
-        
+      
         return Category::all();
 
     }
 
-    public function get($id){
-        
+    public function get(int $id){
+       
         return Category::where('id', $id)->first();
 
     }
 
-    public function delete($category){
+    public function delete(Category $category):bool {
         
         $category->delete();
         return true;
 
     }
 
-    public function create($data){
+    public function create(array $data):bool {
 
     	$category = new Category();
 
@@ -36,7 +36,7 @@ class CategoryRepository implements CRUDRepositoryInterface
     	return true;
     }
 
-    public function update($category,$data){
+    public function update(Category $category,array $data):bool {
 
     	$category->name         =   $data['name'];
     	$category->description  =   $data['description'];
