@@ -5,14 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Category;
 use Illuminate\Support\Facades\DB;
-use App\Repositories\CRUDRepositoryInterface;
+use App\Repositories\CategoryRepository;
 
 class CategoryController extends Controller
 {
     
     protected $category;
     
-    public function __construct(CRUDRepositoryInterface $category){
+    public function __construct(CategoryRepository $category){
         $this->category = $category;
     }
 

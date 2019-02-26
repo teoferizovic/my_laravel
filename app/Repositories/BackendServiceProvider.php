@@ -13,5 +13,10 @@ class BackendServiceProvider extends ServiceProvider
             'App\Repositories\CRUDRepositoryInterface',
             'App\Repositories\CategoryRepository'
         );
+
+         $this->app->bind(
+            'App\Repositories\CRUDRepositoryInterface',
+            'App\Repositories\RegionRepository'
+        );
     }
 }

@@ -18,7 +18,7 @@ class CategoryRepository implements CRUDRepositoryInterface
 
     }
 
-    public function delete(Category $category):bool {
+    public function delete($category):bool {
         
         $category->delete();
         return true;
@@ -36,7 +36,7 @@ class CategoryRepository implements CRUDRepositoryInterface
     	return true;
     }
 
-    public function update(Category $category,array $data):bool {
+    public function update($category,array $data):bool {
 
     	$category->name         =   $data['name'];
     	$category->description  =   $data['description'];

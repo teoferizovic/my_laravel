@@ -1,8 +1,6 @@
 <?php
 namespace App\Repositories;
 
-use App\Category;
-
 interface CRUDRepositoryInterface
 {
 	public function all();
@@ -11,7 +9,7 @@ interface CRUDRepositoryInterface
 
 	public function create(array $data):bool;
 
-	public function update(Category $category,array $data):bool;
+	public function update($obj,array $data):bool;
 
-	public function delete(Category $category):bool;
+	public function delete($obj):bool;
 }
