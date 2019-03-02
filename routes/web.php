@@ -11,9 +11,9 @@
 |
 */
 
-Route::get('/', function () {
+/*Route::get('/', function () {
     return view('welcome');
-});
+});*/
 
 Route::post('/users/register', 'UserController@create');
 
@@ -40,11 +40,12 @@ Route::middleware(['check.auth','permissions'])->group(function () {
 	Route::get('/products/index/{id?}', 'ProductController@index');
 	//order routes
 	Route::post('/orders/create', 'OrderController@create');
+
 	Route::put('/orders/update/{id}', 'OrderController@update');
+	
 	Route::get('/orders/index', 'OrderController@index');
+	
 	Route::get('/orders/index1', 'OrderController@index1');
-
-
 	//order_product routes
 	Route::post('/order_products/create', 'OrderProductController@create');
 });

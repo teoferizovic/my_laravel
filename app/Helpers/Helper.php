@@ -49,4 +49,18 @@ class Helper
         return $finalDatas;
     }
 
+    public static function allowedParams(array $params,array $queryParams) : array {
+              
+        $allowedParams = [];
+
+        foreach ($params as $param) {
+            if(isset($queryParams[$param])){
+                $allowedParams[] = $param;
+                $allowedParams[] = $queryParams[$param];
+             }   
+        }
+
+        return $allowedParams;
+    }
+
 }
