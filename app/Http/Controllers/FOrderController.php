@@ -8,6 +8,12 @@ use App\Http\Requests\Custom\CustomFOrderRequest;
 
 class FOrderController extends Controller
 {
+    protected $forder;
+    
+    public function __construct(FOrder $forder){
+        $this->forder = $forder;
+    }
+
     public function create(){
         
         $request = Request();
@@ -20,17 +26,10 @@ class FOrderController extends Controller
 		
         $input = $request->all();
             
-        $f_order = new FOrder();
-
-    	$f_order->user_id 	 	 =  	$input['user_id'];
-    	$f_order->order_id 	 	 =  	$input['order_id'];
-    	$f_order->payment_id 	 =  	$input['payment_id'];
-    	$f_order->final_price    =  	$input['final_price'];
-    	$f_order->created_at     =  	$input['created_at'];
-    	
-    	if ($f_order->save()) {
-    		return \Response::json($f_order,201);
-    	}
-    	
+        if(!$this->forder->new($input)){
+             return  \Response::json(['message' => ' Internal Server Error!'], 500);
+        }
+        
+    	return \Response::json($input,201);
     }
 }

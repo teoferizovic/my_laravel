@@ -8,7 +8,7 @@ class Order extends Model
 {
    // use SoftDeletes;
 
-	protected $dates = ['deleted_at'];
+	  protected $dates = ['deleted_at'];
     protected $table = 'orders';
 
     public function scopeStatus($query)
@@ -34,5 +34,12 @@ class Order extends Model
     public function user()
     {
         return $this->belongsTo('App\User');
+    }
+
+    public function orders_users($id){
+         return $this::where('user_id',$id)->where(function($q) {
+                $q->where('status', 'A')
+                  ->orWhere('status', 'P');
+          })->get();
     }
 }

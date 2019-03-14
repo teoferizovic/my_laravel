@@ -40,6 +40,7 @@ Route::middleware(['check.auth','permissions'])->group(function () {
 
 	//product routes
 	Route::get('/products/index/{id?}', 'ProductController@index');
+	
 	//order routes
 	Route::post('/orders/create', 'OrderController@create');
 
@@ -48,6 +49,9 @@ Route::middleware(['check.auth','permissions'])->group(function () {
 	Route::get('/orders/index', 'OrderController@index');
 	
 	Route::get('/orders/index1', 'OrderController@index1');
+
+	Route::get('/orders/users/{id}', 'OrderController@orders_users');
+
 	//order_product routes
 	Route::post('/order_products/create', 'OrderProductController@create');
 });
@@ -58,7 +62,7 @@ Route::get('/orders/checkout/{id}', 'OrderController@checkout');
 
 Route::post('/payments/create', 'PaymentController@create');
 
-Route::post('/forder/create', 'FOrderController@create');
+Route::post('/forders/create', 'FOrderController@create');
 
 //region routes
 Route::get('/regions/index/{id?}', 'RegionController@index');

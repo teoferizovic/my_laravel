@@ -25,8 +25,10 @@ class SubRegionController extends Controller
     }
 
     public static function delete($regionId):bool {
-    	SubRegion::where('region_id', $regionId)->delete();
+    	
+        SubRegion::where('region_id', $regionId)->delete();
     	return true;
+        
     }
 
 

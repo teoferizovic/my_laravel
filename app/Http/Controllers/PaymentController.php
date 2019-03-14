@@ -8,9 +8,10 @@ use Illuminate\Http\Request;
 
 class PaymentController extends Controller
 {
+    protected $payment;
     
-    public function index(){
-        //
+    public function __construct(Payment $payment){
+        $this->payment = $payment;
     }
 
     public function create(Request $request){   
@@ -18,36 +19,12 @@ class PaymentController extends Controller
         $input = $request->all();
         
         //checking if standard or batch insert
-        if(((Helper::isAssoc($input)) ? $this->store($input) : $this->batchStore($input))==false){
-            return \Response::json(['message' => 'Bad request!'], 400);
+        if(((Helper::isAssoc($input)) ? $this->payment->store($input) : $this->payment->batchStore($input))==false){
+                return \Response::json(['message' => 'Bad request!'], 400);
         }
 
         return \Response::json(['message' => 'Successfully saved item!'], 200);
 
-    }
-
-    public function batchStore(array $input){
-        
-        if(!Payment::insert($input)){
-            return false;
-        }
-
-        return true;
-
-    }
-
-    
-    public function store(array $input){
-
-        $payment = new Payment();
-        $payment->name = $input['name'];
-        
-        if($payment->save()){
-            return true;
-        }
-
-        return false;
-        
     }
 
 }

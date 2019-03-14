@@ -16,7 +16,13 @@ use App\Jobs\SendEmail;
 class OrderController extends Controller
 {
      
-	 public function index(){
+	 protected $order;
+
+     public function __construct(Order $order){
+         $this->order = $order;
+     }
+
+     public function index(){
 	 	
 	 	$orders = Order::with(['products'])->where('status', "F")->get();
     	return \Response::json($orders,201);
@@ -29,6 +35,13 @@ class OrderController extends Controller
         //$orders = Order::whereFinalPrice(40)->get();
         return \Response::json($orders,201);
 
+     }
+
+     public function orders_users($id){
+
+         $order_user = $this->order->orders_users($id);
+         return \Response::json(($order_user != null) ? ['data' => $order_user] : ['data'=>[]],200);
+       
      }
 	 
      public function create(){
