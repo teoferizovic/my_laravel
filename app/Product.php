@@ -11,12 +11,21 @@ class Product extends Model
         return $this->belongsTo('App\Category');
     }
 
+    public function ratings()
+    {
+        return $this->hasMany('App\Rating');
+    }
+
     public function products(){  	
     	return $this::with(['category'])->where('status','>', 0)->paginate(5);
     }
 
     public function product($id){
-    	return $this::with(['category'])->where('id', $id)->where('status','>', 0)->get(); 
+    	return $this::with(['category','ratings'])->where('id', $id)->where('status','>', 0)->get(); 
+    }
+
+    public function rating($id){
+        return \DB::select("SELECT sum(r.rating) / COUNT(r.id) as rating FROM ratings as r WHERE r.product_id=".$id);
     }
 
     public function search($params){
