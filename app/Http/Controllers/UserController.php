@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\UserImageController;
 use App\Http\Controllers\UserLogController;
+use App\Jobs\SendEmailResetPassword;
 
 class UserController extends Controller
 {
@@ -185,5 +186,44 @@ class UserController extends Controller
     	Redis::del($token);
 
     	return \Response::json(['message' => 'Successfully logged out!'], 200);
+    }
+
+    public function forgot_password(){
+
+        $request = Request();        
+        $input = $request->all();
+
+        $user = User::whereEmail($input['email'])->first();
+        
+        if ($user == null){
+            return \Response::json(['message' => 'Not Found!'], 404);
+        }
+
+        $forgotToken = str_random(60);
+
+        $user->forgot_token  =  $forgotToken;
+        
+        if($user->save()){
+            SendEmailResetPassword::dispatch($user);
+            return \Response::json(['message' => 'Successfully edit user!'], 200);
+        }
+    }
+
+    public function reset_password(){
+
+        $request = Request();        
+        $input = $request->all();
+
+        $user = User::whereEmail($input['email'])->whereForgot_token($input['forgot_token'])->first();
+        
+        if ($user == null){
+            return \Response::json(['message' => 'Not Found!'], 404);
+        } 
+
+        $user->password  =  Hash::make($input['password']);
+        
+        if($user->save()){
+            return \Response::json(['message' => 'Successfully edit user!'], 200);
+        }
     }
 }

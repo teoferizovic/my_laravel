@@ -23,6 +23,8 @@ Route::put('/users/logout/{token?}', 'UserController@logout');
 
 Route::put('/users/forgot_password/', 'UserController@forgot_password');
 
+Route::put('/users/reset_password/', 'UserController@reset_password');
+
 Route::get('/roles/index/{id?}', 'RoleController@index');
 
 Route::middleware(['check.auth','permissions'])->group(function () {
