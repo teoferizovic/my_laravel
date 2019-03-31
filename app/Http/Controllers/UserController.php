@@ -215,15 +215,15 @@ class UserController extends Controller
         $request = Request();        
         $input = $request->all();
 
-        $user = User::whereEmail($input['email'])->whereForgot_token($input['forgot_token'])->where('forgot_token_expire','>=',date('Y-m-d H:i:s', strtotime('now')))->first();
+        $user = User::whereForgot_token($input['forgot_token'])->where('forgot_token_expire','>=',date('Y-m-d H:i:s', strtotime('now')))->first();
         
         if ($user == null){
             return \Response::json(['message' => 'Not Found!'], 404);
         } 
         
-        $user->password     =  Hash::make($input['password']);
-        $user->forgot_token = null; 
-        $user->forgot_token_expire = null;
+        $user->password             =  Hash::make($input['password']);
+        $user->forgot_token         =  null; 
+        $user->forgot_token_expire  =  null;
         
         if($user->save()){
             return \Response::json(['message' => 'Successfully edit user!'], 200);

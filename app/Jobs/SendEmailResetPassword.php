@@ -44,7 +44,7 @@ class SendEmailResetPassword implements ShouldQueue
         Mail::send([],$vals, function ($message) use($vals) {
             $message->from($vals['email'], 'Laravel');
             $message->subject('Confirm order');
-            $message->setBody("<p>Reset your password on </p> <a href='".config('app.url').":4200/reset_password?email=".$vals['email']."&forgot_token=".$vals['forgot_token']."' target='_blank'>Link</a>", 'text/html');
+            $message->setBody("<p>Reset your password on </p> <a href='".config('app.url').":4200/reset-password/".$vals['forgot_token']."' target='_blank'>Link</a>", 'text/html');
             $message->to('feriz2013@hotmail.com')->cc('bar@example.com');
         });
         
