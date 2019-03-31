@@ -189,7 +189,7 @@ class UserController extends Controller
     }
 
     public function forgot_password(){
-
+        
         $request = Request();        
         $input = $request->all();
 
@@ -201,7 +201,8 @@ class UserController extends Controller
 
         $forgotToken = str_random(60);
 
-        $user->forgot_token  =  $forgotToken;
+        $user->forgot_token         =  $forgotToken;
+        $user->forgot_token_expire  = date('Y-m-d H:i:s', strtotime('now +20 minutes'));
         
         if($user->save()){
             SendEmailResetPassword::dispatch($user);
@@ -214,13 +215,15 @@ class UserController extends Controller
         $request = Request();        
         $input = $request->all();
 
-        $user = User::whereEmail($input['email'])->whereForgot_token($input['forgot_token'])->first();
+        $user = User::whereEmail($input['email'])->whereForgot_token($input['forgot_token'])->where('forgot_token_expire','>=',date('Y-m-d H:i:s', strtotime('now')))->first();
         
         if ($user == null){
             return \Response::json(['message' => 'Not Found!'], 404);
         } 
-
-        $user->password  =  Hash::make($input['password']);
+        
+        $user->password     =  Hash::make($input['password']);
+        $user->forgot_token = null; 
+        $user->forgot_token_expire = null;
         
         if($user->save()){
             return \Response::json(['message' => 'Successfully edit user!'], 200);

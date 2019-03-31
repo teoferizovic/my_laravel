@@ -15,6 +15,7 @@ class AddForgotTokenInTblUsers extends Migration
     {
          Schema::table('users', function (Blueprint $table) {
             $table->string('forgot_token',100)->nullable()->after('role_id');
+            $table->timestamp('forgot_token_expire')->nullable()->after('forgot_token');
         });
     }
 
@@ -27,6 +28,7 @@ class AddForgotTokenInTblUsers extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('forgot_token');
+            $table->dropColumn('forgot_token_expire');
         });
     }
 }
