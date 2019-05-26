@@ -27,6 +27,8 @@ Route::put('/users/reset_password/', 'UserController@reset_password');
 
 Route::get('/roles/index/{id?}', 'RoleController@index');
 
+Route::get('/users/actives/{id?}', 'UserController@active_users');
+
 Route::middleware(['check.auth','permissions'])->group(function () {
 
 	Route::get('/users/index/{id?}', 'UserController@index');

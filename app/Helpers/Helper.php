@@ -2,6 +2,8 @@
 
 namespace App\Helpers;
 
+use Illuminate\Support\Facades\Redis;
+
 class Helper
 {
     public static function discountPrice(float $price,float $discount) : float {
@@ -61,6 +63,34 @@ class Helper
         }
 
         return $allowedParams;
+    }
+
+    public static function activeUsers() :  array  {
+         
+         $tokenArr = ['9f3envf05aTWDQgdwMU0blJ69Cu0nRjuO5Gfd0P1QVPeYXjjRkDg5xD86ZWB','gd7c4M5MQdymtE0d6YzwZ93Y4VBOny8y2I2jSL8H5tcwdPUfWfHPPMxRWB1I','a9sLW4safXPmm9UOdo32ysh61JXH9j8IWfUHMlPC9uhWTyHlxIFXaFP95A1m','cACVfIb578y8EvJBSUBVauvyQ0mFeyBtLfIb8Nm9bFocPExdH2UmzcRgMHzO','cACVfIb578y8EvJBSUBVauvyQ0mFeyBtLfIb8Nm9bFocPExdH2UmzcRgMHzO'];
+
+         $emailArr = [];
+
+         foreach ($tokenArr as $value) {
+             $emailArr[] = Redis::get($value);
+         }
+           
+         return array_unique($emailArr);
+    }
+
+    public static function singleUser($users,int $id)  : array {
+
+        $user = null; 
+      
+        foreach($users as $value) {
+            if ($value->id == $id) {
+                $user = $value;
+                break;
+            }
+        }
+
+        return ($user==null) ? [] :[$user];
+
     }
 
 }

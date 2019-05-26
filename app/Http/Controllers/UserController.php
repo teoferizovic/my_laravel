@@ -161,6 +161,7 @@ class UserController extends Controller
         }
 
 		$authToken = str_random(60);
+        //$authToken = bin2hex(openssl_random_pseudo_bytes(32));
 		Redis::set($authToken, $user->email);
 
 		$user->api_token = $authToken;
@@ -228,5 +229,18 @@ class UserController extends Controller
         if($user->save()){
             return \Response::json(['message' => 'Successfully edit user!'], 200);
         }
+    }
+
+    public function active_users($id=null){
+        
+        $emailArr = Helper::activeUsers();
+
+        $users = User::whereIn('email',$emailArr)->get();
+       
+        if($id!=null){
+          return \Response::json(Helper::singleUser($users,$id) ,200);  
+        }
+
+        return \Response::json($users,200);
     }
 }
