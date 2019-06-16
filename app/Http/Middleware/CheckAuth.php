@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use App\User;
-use Illuminate\Support\Facades\Redis;
+use App\Services\RedisService;
 use Illuminate\Http\Response;
 
 class CheckAuth
@@ -20,8 +20,7 @@ class CheckAuth
     {
         
         $authToken = str_replace("Bearer ","",$request->header('Authorization'));
-        
-        $user = Redis::get($authToken);
+        $user = RedisService::getValue($authToken);
         
         if(!$user){
             return \Response::json(['message' => 'Unauthorized!'], 401);

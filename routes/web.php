@@ -60,6 +60,8 @@ Route::middleware(['check.auth','permissions'])->group(function () {
 
 	//order_product routes
 	Route::post('/order_products/create', 'OrderProductController@create');
+
+	Route::delete('/regions/delete/{id}', 'RegionController@delete');
 });
 
 Route::get('/orders/indexV', 'ProductViewController@index');
@@ -75,7 +77,7 @@ Route::get('/regions/index/{id?}', 'RegionController@index');
 
 Route::post('/regions/create', 'RegionController@create');
 
-Route::delete('/regions/delete/{id}', 'RegionController@delete');
+
 
 Route::put('/regions/update/{id}', 'RegionController@update');
 //Auth::routes();

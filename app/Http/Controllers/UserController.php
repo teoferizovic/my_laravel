@@ -8,11 +8,11 @@ use Illuminate\Support\Facades\Hash;
 use App\User;
 use Helper;
 use Config;
-use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\UserImageController;
 use App\Http\Controllers\UserLogController;
 use App\Jobs\SendEmailResetPassword;
+use App\Services\RedisService;
 
 class UserController extends Controller
 {
@@ -72,7 +72,6 @@ class UserController extends Controller
 
     public function create(){
     	
-    	
     	$request = Request();
     	$input = $request->all();
 
@@ -85,8 +84,6 @@ class UserController extends Controller
     	if($user) {
     		return \Response::json(['message' => 'User with that username allready exists!'], 400);
     	}
-
-        //var_dump(Hash::make($input['password']));die;
     	
     	$newUser = new User();
 
@@ -131,7 +128,8 @@ class UserController extends Controller
 	    	
 	    	$redisAclKey = $newUser->email."-"."ACL";
 	    	
-	    	Redis::set($redisAclKey,json_encode($permissions));
+	    	//Redis::set($redisAclKey,json_encode($permissions));
+            RedisService::setValue($redisAclKey,json_encode($permissions),'acl-cache');
 
     		return \Response::json(['message' => 'Successfully saved item!'], 200);
     	}
@@ -162,7 +160,8 @@ class UserController extends Controller
 
 		$authToken = str_random(60);
         //$authToken = bin2hex(openssl_random_pseudo_bytes(32));
-		Redis::set($authToken, $user->email);
+	
+        RedisService::setValue($authToken,$user->email);
 
 		$user->api_token = $authToken;
 		
@@ -178,13 +177,13 @@ class UserController extends Controller
     	}
 
     	//find auth_token in Redis and delete it
-    	$user = Redis::get($token);
+        $user = RedisService::getValue($token);
     	
-    	if ($user == null){
+    	if (empty($user)){
     		return \Response::json(['message' => 'Not Found!'], 404);
     	}
-
-    	Redis::del($token);
+        
+        RedisService::removeValue($token);
 
     	return \Response::json(['message' => 'Successfully logged out!'], 200);
     }

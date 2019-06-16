@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
+use App\Services\RedisService;
 
 class CheckPermissions
 {
@@ -23,14 +24,11 @@ class CheckPermissions
           "put" => "update",
           "delete" => "delete",
         ];
-
+        
         $authToken = str_replace("Bearer ","",$request->header('Authorization'));
         
-
-        $redisAclKey = Redis::get($authToken)."-"."ACL";
-        
-        $permissionsJson = json_decode(Redis::get($redisAclKey));
-
+        $redisAclKey = RedisService::getValue($authToken)."-"."ACL";
+        $permissionsJson = json_decode(RedisService::getValue($redisAclKey,'acl-cache'));
         $permissionsArr = (array) $permissionsJson;
         
         //$routes[strtolower($request->method())]
@@ -42,3 +40,4 @@ class CheckPermissions
         return $next($request);
     }
 }
+
