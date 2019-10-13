@@ -230,12 +230,12 @@ class UserController extends Controller
         }
     }
 
-    public function active_users($id=null){
+    public function active_users($id=null) {
         
-        $emailArr = Helper::activeUsers();
+        $emailArr = RedisService::getValues();
 
         $users = User::whereIn('email',$emailArr)->get();
-       
+        
         if($id!=null){
           return \Response::json(Helper::singleUser($users,$id) ,200);  
         }

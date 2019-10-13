@@ -29,6 +29,8 @@ Route::get('/roles/index/{id?}', 'RoleController@index');
 
 Route::get('/users/actives/{id?}', 'UserController@active_users');
 
+Route::get('/products/index/{id?}', 'ProductController@index');
+
 Route::middleware(['check.auth','permissions'])->group(function () {
 
 	Route::get('/users/index/{id?}', 'UserController@index');
@@ -45,7 +47,7 @@ Route::middleware(['check.auth','permissions'])->group(function () {
 	Route::delete('/categories/delete/{id}', 'CategoryController@delete');
 
 	//product routes
-	Route::get('/products/index/{id?}', 'ProductController@index');
+	//Route::get('/products/index/{id?}', 'ProductController@index');
 	
 	//order routes
 	Route::post('/orders/create', 'OrderController@create');
@@ -60,8 +62,6 @@ Route::middleware(['check.auth','permissions'])->group(function () {
 
 	//order_product routes
 	Route::post('/order_products/create', 'OrderProductController@create');
-
-	Route::delete('/regions/delete/{id}', 'RegionController@delete');
 });
 
 Route::get('/orders/indexV', 'ProductViewController@index');
@@ -77,9 +77,8 @@ Route::get('/regions/index/{id?}', 'RegionController@index');
 
 Route::post('/regions/create', 'RegionController@create');
 
-
+Route::delete('/regions/delete/{id}', 'RegionController@delete');
 
 Route::put('/regions/update/{id}', 'RegionController@update');
-//Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');

@@ -29,4 +29,18 @@ class RedisService
 		return true;
 	}
 
+	public static function getValues() : array {
+		
+		$allKeys = Redis::keys('*');
+		
+		$values = [];
+
+        foreach ($allKeys as $key) {
+             $values[] = Redis::get($key);
+        }
+          
+        return array_unique($values);
+		
+	}
+
 }
