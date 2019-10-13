@@ -81,4 +81,14 @@ Route::delete('/regions/delete/{id}', 'RegionController@delete');
 
 Route::put('/regions/update/{id}', 'RegionController@update');
 
+//comments routes
+Route::get('/comments/index/{id?}', 'CommentController@index');
+
+Route::post('/comments/create', 'CommentController@create');
+
+Route::delete('/comments/delete/{id}', 'CommentController@delete');
+
+Route::put('/comments/update/{id}', 'CommentController@update');
+
+
 Route::get('/home', 'HomeController@index')->name('home');
