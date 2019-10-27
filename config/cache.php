@@ -79,6 +79,7 @@ return [
 
     ],
 
+    'drafts-channel' => env('DRAFTS_CHANNEL','drafts-channel1'),
     /*
     |--------------------------------------------------------------------------
     | Cache Key Prefix

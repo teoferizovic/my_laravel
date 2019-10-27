@@ -21,11 +21,11 @@ class CategoryController extends Controller
     	
         if($id != null){
     		$category = $this->category->get($id);
-            return \Response::json(($category==null) ? [] : [$category],201);
+            return \Response::json(($category==null) ? [] : [$category],200);
     	}
 
         $categories  = $this->category->all();
-    	return \Response::json($categories,201);
+    	return \Response::json($categories,200);
     }
 
     /*public function store($id=null,Request $request){
@@ -58,7 +58,7 @@ class CategoryController extends Controller
 
         $this->category->create($data);
     	
-    	return \Response::json(['message' => 'Successfully saved item!'], 200);
+    	return \Response::json(['message' => 'Successfully saved item!'], 201);
     	
     }
 

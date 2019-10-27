@@ -17,6 +17,13 @@ class RedisService
 		return true;
 	}
 
+	public static function setExpire(string $key,int $expire, $connection=null) : bool {
+		$redisCinnection = ($connection==null) ? 'default' : $connection;
+		$redis = Redis::connection($redisCinnection);
+		$redis->expire($key, $expire);
+		return true;
+	}
+
 	public static function getValue(string $key,$connection=null) : string {
 	     $redisCinnection = ($connection==null) ? 'default' : $connection;
 	     $redis = Redis::connection($redisCinnection);		
@@ -42,5 +49,31 @@ class RedisService
         return array_unique($values);
 		
 	}
+
+	public static function searchByPattern(int $id,$connection=null) : array {
+		
+		$redisCinnection = ($connection==null) ? 'default' : $connection;
+		$redis = Redis::connection($redisCinnection);
+
+		$pattern = '#'.$id.'#*';
+
+		$allKeys = $redis->scan(0, 'match', $pattern);
+
+		$values = [];
+
+        foreach ($allKeys[1] as $key) {
+             $values[] = $redis->get($key);
+        }
+
+		return $values;
+	}
+
+	public static function publishOnChannel(string $channel) : bool {
+		Redis::publish($channel, json_encode(['foo' => 'bar']));
+		return true;
+	}
+
+	//keys *#6#*
+	//SCAN 0 match #6#*
 
 }

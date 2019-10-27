@@ -19,11 +19,11 @@ class CommentController extends Controller
     	
     	if($id != null){
             $comment = $this->comment->get($id);
-            return \Response::json(($comment == null) ? [] : [$comment],201);
+            return \Response::json(($comment == null) ? [] : [$comment],200);
         }
 
         $comments  = $this->comment->getAll();
-        return \Response::json($comments,201);
+        return \Response::json($comments,200);
     }
 
     public function create(Request $request){
@@ -38,7 +38,7 @@ class CommentController extends Controller
      	
         $this->comment->new($input);
     	
-    	return \Response::json(['message' => 'Successfully saved item!'], 200);
+    	return \Response::json(['message' => 'Successfully saved item!'], 201);
 
     }
 
@@ -64,7 +64,7 @@ class CommentController extends Controller
     	return \Response::json(['message' => 'Successfully updated item!'], 200);
     }
 
-     public function delete($id){
+    public function delete($id){
     	
     	$comment = $this->comment->get($id);
 

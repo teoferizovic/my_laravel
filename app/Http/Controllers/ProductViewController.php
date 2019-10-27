@@ -10,7 +10,7 @@ class ProductViewController extends Controller
     public function index(){
     	
     	$products = ProductView::all();
-    	return \Response::json($products,201);
+    	return \Response::json($products,200);
     	
     }
 }

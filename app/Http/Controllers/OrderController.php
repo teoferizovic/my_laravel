@@ -25,7 +25,7 @@ class OrderController extends Controller
      public function index(){
 	 	
 	 	$orders = Order::with(['products'])->where('status', "F")->get();
-    	return \Response::json($orders,201);
+    	return \Response::json($orders,200);
 
 	 }
 

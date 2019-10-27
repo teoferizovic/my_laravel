@@ -62,6 +62,16 @@ Route::middleware(['check.auth','permissions'])->group(function () {
 
 	//order_product routes
 	Route::post('/order_products/create', 'OrderProductController@create');
+
+	//comments routes
+	Route::get('/comments/index/{id?}', 'CommentController@index');
+
+	Route::post('/comments/create', 'CommentController@create');
+
+	Route::delete('/comments/delete/{id}', 'CommentController@delete');
+
+	Route::put('/comments/update/{id}', 'CommentController@update');
+
 });
 
 Route::get('/orders/indexV', 'ProductViewController@index');
@@ -81,14 +91,16 @@ Route::delete('/regions/delete/{id}', 'RegionController@delete');
 
 Route::put('/regions/update/{id}', 'RegionController@update');
 
-//comments routes
-Route::get('/comments/index/{id?}', 'CommentController@index');
+//message routes
+Route::get('/messages/index/{id?}', 'MessageController@index');
 
-Route::post('/comments/create', 'CommentController@create');
+Route::post('/messages/create', 'MessageController@create');
 
-Route::delete('/comments/delete/{id}', 'CommentController@delete');
+Route::post('/messages/draft', 'MessageController@createDraft');
 
-Route::put('/comments/update/{id}', 'CommentController@update');
+Route::delete('/messages/delete/{id}', 'MessageController@delete');
+
+Route::put('/messages/update/{id}', 'MessageController@update');
 
 
 Route::get('/home', 'HomeController@index')->name('home');

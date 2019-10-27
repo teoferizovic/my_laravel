@@ -32,7 +32,7 @@ class ProductController extends Controller
             $params = Helper::allowedParams(['name','price'],$queryParams);
                 if(!empty($params)){
                     $product = $this->product->search($params);
-                        return \Response::json(($product!=null) ? ['data' => $product] : ['data'=>[]],201);
+                        return \Response::json(($product!=null) ? ['data' => $product] : ['data'=>[]],200);
                 }
                 
         }

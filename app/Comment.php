@@ -43,7 +43,6 @@ class Comment extends Model
 	  	$comment->comment = $data['comment']; 
 
 	  	return ($comment->save()) ? true : false;
-
 	}
 
 	public function getAll() {
@@ -53,5 +52,4 @@ class Comment extends Model
 	public function remove(int $id) {
 		$this->where('id', $id)->delete();
 	}  
-
 }

@@ -23,7 +23,7 @@ class PaymentController extends Controller
                 return \Response::json(['message' => 'Bad request!'], 400);
         }
 
-        return \Response::json(['message' => 'Successfully saved item!'], 200);
+        return \Response::json(['message' => 'Successfully saved item!'], 201);
 
     }
 
