@@ -7,25 +7,28 @@ use Illuminate\Support\Facades\Redis;
 class RedisService
 {
 
-	//to do
-	//add redis connection in constructor
+	static $defaultConnection;
+
+	public function __construct() { 
+		self::$defaultConnection = 'default';
+	}
 	
 	public static function setValue(string $key,string $value, $connection=null) : bool {
-		$redisCinnection = ($connection==null) ? 'default' : $connection;
+		$redisCinnection = ($connection==null) ? self::$defaultConnection : $connection;
 		$redis = Redis::connection($redisCinnection);
 		$redis->set($key, $value);
 		return true;
 	}
 
 	public static function setExpire(string $key,int $expire, $connection=null) : bool {
-		$redisCinnection = ($connection==null) ? 'default' : $connection;
+		$redisCinnection = ($connection==null) ? self::$defaultConnection : $connection;
 		$redis = Redis::connection($redisCinnection);
 		$redis->expire($key, $expire);
 		return true;
 	}
 
 	public static function getValue(string $key,$connection=null) : string {
-	     $redisCinnection = ($connection==null) ? 'default' : $connection;
+	     $redisCinnection = ($connection==null) ? self::$defaultConnection : $connection;
 	     $redis = Redis::connection($redisCinnection);		
 		 $value = $redis->get($key);
 		 return ($value != null) ? $value : '';
@@ -52,7 +55,7 @@ class RedisService
 
 	public static function searchByPattern(int $id,$connection=null) : array {
 		
-		$redisCinnection = ($connection==null) ? 'default' : $connection;
+		$redisCinnection = ($connection==null) ? self::$defaultConnection : $connection;
 		$redis = Redis::connection($redisCinnection);
 
 		$pattern = '#'.$id.'#*';

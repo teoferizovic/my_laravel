@@ -13,6 +13,7 @@ use App\Http\Controllers\UserImageController;
 use App\Http\Controllers\UserLogController;
 use App\Jobs\SendEmailResetPassword;
 use App\Services\RedisService;
+use App\Services\AclService;
 
 class UserController extends Controller
 {
@@ -92,46 +93,15 @@ class UserController extends Controller
     	
     	//$newUser->password = password_hash($input['password'], PASSWORD_BCRYPT);
     	$newUser->password = Hash::make($input['password']);
-        $newUser->role_id = isset($input['role_id']) ? $input['role_id'] : 2;
+        $newUser->role_id = isset($input['role_id']) ? $input['role_id'] : Config::get('constants.role.default');
 
     	if($newUser->save()){
 
     		$userImage = UserImageController::storeFile($input,$newUser->id);
-    		
-    		$allRoles = DB::select('SELECT p.name from permissions as p GROUP BY(p.name)');
     	
-	    	$userRoles = DB::select('SELECT p.name from users as u inner join roles as r on u.role_id = r.id inner join role_permissions as rp on r.id=rp.role_id inner join permissions as p 
-	   			  on rp.permission_id = p.id where u.role_id=:role_id',["role_id" => $newUser->role_id]);
+            AclService::setPermissions($newUser);
 
-	    	$userRolesArr = [];
-	    	$allRolesArr = [];
-	    	$permissions = [];
-
-	    	foreach ($userRoles as $role) {
-	    		$userRolesArr[] = $role->name;
-	    	}
-
-	    	
-	    	foreach ($allRoles as $role) {
-	    		$allRolesArr[] = $role->name;
-	    	}
-
-	    	foreach ($allRolesArr as $role) {
-	   
-	    		if(in_array($role, $userRolesArr)){
-	    			$permissions[$role] = true;
-	    		} else {
-	    			$permissions[$role] = false;
-	    		}
-	   
-	    	}
-	    	
-	    	$redisAclKey = $newUser->email."-"."ACL";
-	    	
-	    	//Redis::set($redisAclKey,json_encode($permissions));
-            RedisService::setValue($redisAclKey,json_encode($permissions),'acl-cache');
-
-    		return \Response::json(['message' => 'Successfully saved item!'], 200);
+    		return \Response::json(['message' => 'Successfully saved item!'], 201);
     	}
 
     	
