@@ -17,22 +17,22 @@ use App\Services\AclService;
 
 class UserController extends Controller
 {
+    private $user;
+
+    public function __construct(User $user){
+        $this->user = $user;
+    }
+
     public function index($id=null){
 
     	if($id != null){
-    		$users = User::with(['user_images','orders','user_logs'=> function ($query) {
-                $query->orderBy('id', 'desc')->limit(1);
-            }])->where('id', $id)->first();
-    		
+            $users = $this->user->get($id);
             return \Response::json($users,200);
     	}
 
         //$users = Helper::EagerLoadingOrders();
-
-    	$users = User::with(['user_images','orders','user_logs'  => function ($query) {
-            $query->orderBy('id', 'desc')->limit(1);
-        }])->get();
-
+        $users = $this->user->getAll();
+    	
     	return \Response::json($users,200);
     }
 
@@ -80,22 +80,15 @@ class UserController extends Controller
     		 return \Response::json(['message' => 'Bad Request!'], 400);
     	}
 
-    	$user = User::where('email', $input['email'])->first();
+        $user = $this->user->getBy('email',$input['email']);
 
     	if($user) {
     		return \Response::json(['message' => 'User with that username allready exists!'], 400);
     	}
-    	
-    	$newUser = new User();
 
-    	$newUser->name = "";
-    	$newUser->email = $input['email'];
-    	
-    	//$newUser->password = password_hash($input['password'], PASSWORD_BCRYPT);
-    	$newUser->password = Hash::make($input['password']);
-        $newUser->role_id = isset($input['role_id']) ? $input['role_id'] : Config::get('constants.role.default');
+        $newUser = $this->user->new($input);
 
-    	if($newUser->save()){
+    	if($newUser) {
 
     		$userImage = UserImageController::storeFile($input,$newUser->id);
     	
@@ -104,7 +97,7 @@ class UserController extends Controller
     		return \Response::json(['message' => 'Successfully saved item!'], 201);
     	}
 
-    	
+    	return \Response::json(['message' => 'Bad Request!'], 400);
     }
 
     public function login(){
@@ -117,8 +110,9 @@ class UserController extends Controller
     		 return \Response::json(['message' => 'Bad Request!'], 400);
     	}
 
-    	$user = User::where('email', $input['email'])->first();
-
+    	//$user = User::where('email', $input['email'])->first();
+        $user = $this->user->getBy('email',$input['email']);
+       
 		//if($user == null or !password_verify($input['password'], $user->password)) {        
         if($user == null or !Hash::check($input['password'], $user->password)) {
 			 return \Response::json(['message' => 'Not Found!'], 404);
@@ -130,7 +124,6 @@ class UserController extends Controller
 
 		$authToken = str_random(60);
         //$authToken = bin2hex(openssl_random_pseudo_bytes(32));
-	
         RedisService::setValue($authToken,$user->email);
 
 		$user->api_token = $authToken;
@@ -200,11 +193,11 @@ class UserController extends Controller
         }
     }
 
-    public function active_users($id=null) {
+    public function activeUsers($id=null) {
         
         $emailArr = RedisService::getValues();
 
-        $users = User::whereIn('email',$emailArr)->get();
+        $users = $this->user->getByArray('email', $emailArr);
         
         if($id!=null){
           return \Response::json(Helper::singleUser($users,$id) ,200);  

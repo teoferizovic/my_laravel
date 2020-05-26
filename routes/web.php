@@ -27,7 +27,7 @@ Route::put('/users/reset_password/', 'UserController@reset_password');
 
 Route::get('/roles/index/{id?}', 'RoleController@index');
 
-Route::get('/users/actives/{id?}', 'UserController@active_users');
+Route::get('/users/actives/{id?}', 'UserController@activeUsers');
 
 Route::get('/products/index/{id?}', 'ProductController@index');
 
